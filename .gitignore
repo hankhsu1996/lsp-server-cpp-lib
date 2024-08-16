@@ -1,0 +1,61 @@
+# Compiled Object files
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lib
+*.a
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Conan generated files
+build/
+conan.lock
+*.cmake
+CMakeUserPresets.json
+ConanPresets.json
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CMakeLists.txt.user
+CTestTestfile.cmake
+Makefile
+build/
+compile_commands.json
+
+# Bazel output directories
+bazel-*
+*.runfiles/
+*.log
+*.err
+*.out
+*.runfiles_manifest
+bazel-out/
+bazel-bin/
+bazel-testlogs/
+bazel-genfiles/
+bazel-*
+
+# Doxygen generated files
+docs/generated/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# Other
+*.DS_Store

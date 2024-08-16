@@ -1,0 +1,23 @@
+""" Module definition for the main module. """
+module(
+    name = "lsp-server-cpp-lib",
+    version = "1.0.0",
+)
+
+# JSON-RPC C++ Library
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "jsonrpc",
+    urls = ["https://github.com/hankhsu1996/jsonrpc-cpp-lib/archive/refs/tags/v1.0.0.tar.gz"],
+    strip_prefix = "jsonrpc-cpp-lib-1.0.0",
+    sha256 = "a381dc02ab95c31902077793e926adbb0d8f67eadbc386b03451e952d50f0615",
+)
+
+# Hedron's Compile Commands Extractor for Bazel
+# https://github.com/hedronvision/bazel-compile-commands-extractor
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+    commit = "1e08f8e0507b6b6b1f4416a9a22cf5c28beaba93",
+)

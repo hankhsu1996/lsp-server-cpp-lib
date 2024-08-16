@@ -1,0 +1,8 @@
+# .bazelrc
+
+# Set the C++ standard to C++20
+build --cxxopt='-std=c++20'
+
+# Enable warnings
+build --cxxopt='-Wall'
+build --cxxopt='-Wextra'
