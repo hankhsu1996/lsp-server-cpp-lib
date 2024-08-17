@@ -47,7 +47,7 @@ struct Range {
 // Text Document Item
 struct TextDocumentItem {
   DocumentUri uri;
-  std::string languageId;
+  std::string language_id;
   std::int32_t version;
   std::string text;
 
@@ -55,7 +55,7 @@ struct TextDocumentItem {
       DocumentUri uri, std::string language_id, std::int32_t version,
       std::string text)
       : uri(std::move(uri)),
-        languageId(std::move(language_id)),
+        language_id(std::move(language_id)),
         version(version),
         text(std::move(text)) {
   }
@@ -89,12 +89,12 @@ struct OptionalVersionedTextDocumentIdentifier : public TextDocumentIdentifier {
 
 // Text Document Position Params
 struct TextDocumentPositionParams {
-  TextDocumentIdentifier textDocument;
+  TextDocumentIdentifier text_document;
   Position position;
 
   explicit TextDocumentPositionParams(
       TextDocumentIdentifier text_document, Position position)
-      : textDocument(std::move(text_document)), position(position) {
+      : text_document(std::move(text_document)), position(position) {
   }
 };
 
@@ -119,23 +119,23 @@ using DocumentSelector = std::vector<DocumentFilter>;
 // Text Edit
 struct TextEdit {
   Range range;
-  std::string newText;
+  std::string newT_text;
 
   explicit TextEdit(Range range, std::string new_text)
-      : range(std::move(range)), newText(std::move(new_text)) {
+      : range(std::move(range)), newT_text(std::move(new_text)) {
   }
 };
 
 struct ChangeAnnotation {
   std::string label;
-  std::optional<bool> needsConfirmation;
+  std::optional<bool> needs_confirmation;
   std::optional<std::string> description;
 
   explicit ChangeAnnotation(
       std::string label, std::optional<bool> needs_confirmation = std::nullopt,
       std::optional<std::string> description = std::nullopt)
       : label(std::move(label)),
-        needsConfirmation(needs_confirmation),
+        needs_confirmation(needs_confirmation),
         description(std::move(description)) {
   }
 };
@@ -143,25 +143,25 @@ struct ChangeAnnotation {
 using ChangeAnnotationIdentifier = std::string;
 
 struct AnnotatedTextEdit : public TextEdit {
-  ChangeAnnotationIdentifier annotationId;
+  ChangeAnnotationIdentifier annotation_id;
 
   AnnotatedTextEdit(
       Range range, std::string new_text,
       ChangeAnnotationIdentifier annotation_id)
       : TextEdit(std::move(range), std::move(new_text)),
-        annotationId(std::move(annotation_id)) {
+        annotation_id(std::move(annotation_id)) {
   }
 };
 
 // Text Document Edit
 struct TextDocumentEdit {
-  OptionalVersionedTextDocumentIdentifier textDocument;
+  OptionalVersionedTextDocumentIdentifier text_document;
   std::vector<std::variant<TextEdit, AnnotatedTextEdit>> edits;
 
   TextDocumentEdit(
       OptionalVersionedTextDocumentIdentifier text_document,
       std::vector<std::variant<TextEdit, AnnotatedTextEdit>> edits)
-      : textDocument(std::move(text_document)), edits(std::move(edits)) {
+      : text_document(std::move(text_document)), edits(std::move(edits)) {
   }
 };
 
