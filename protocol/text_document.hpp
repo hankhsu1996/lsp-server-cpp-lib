@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <optional>
 
-#include "lsp/protocol/register_capability.hpp"
-#include "lsp/types/basic.hpp"
+#include "protocol/register_capability.hpp"
+#include "types/basic.hpp"
 
 namespace lsp::protocol {
 

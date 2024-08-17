@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "lsp/types/basic.hpp"
+#include "types/basic.hpp"
 
 namespace lsp::protocol {
 

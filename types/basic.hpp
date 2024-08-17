@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-#include "lsp/types/base.hpp"
+#include "types/base.hpp"
 
 namespace lsp::types {
 

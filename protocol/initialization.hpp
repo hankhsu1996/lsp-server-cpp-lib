@@ -1,13 +1,13 @@
 #pragma once
 
 #include <cstdint>
-#include <lsp/types/base.hpp>
 #include <optional>
 #include <string>
 
-#include "lsp/protocol/navigation.hpp"
-#include "lsp/protocol/text_document.hpp"
-#include "lsp/types/basic.hpp"
+#include "protocol/navigation.hpp"
+#include "protocol/text_document.hpp"
+#include "types/base.hpp"
+#include "types/basic.hpp"
 
 namespace lsp::protocol {
 
