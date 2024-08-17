@@ -18,16 +18,20 @@ struct RegularExpressionsClientCapabilities {
   std::string engine;
   std::optional<std::string> version;
 
+  RegularExpressionsClientCapabilities() = default;
+
   explicit RegularExpressionsClientCapabilities(
-      std::string engine, std::optional<std::string> version = std::nullopt)
+      std::string engine, std::optional<std::string> version)
       : engine(std::move(engine)), version(std::move(version)) {
   }
 };
 
 // Position
 struct Position {
-  Uinteger line;
-  Uinteger character;
+  Uinteger line{};
+  Uinteger character{};
+
+  Position() = default;
 
   constexpr explicit Position(Uinteger line, Uinteger character)
       : line(line), character(character) {
@@ -39,6 +43,8 @@ struct Range {
   Position start;
   Position end;
 
+  Range() = default;
+
   constexpr explicit Range(const Position& start, const Position& end)
       : start(start), end(end) {
   }
@@ -48,8 +54,10 @@ struct Range {
 struct TextDocumentItem {
   DocumentUri uri;
   std::string language_id;
-  std::int32_t version;
+  std::int32_t version{};
   std::string text;
+
+  TextDocumentItem() = default;
 
   explicit TextDocumentItem(
       DocumentUri uri, std::string language_id, std::int32_t version,
@@ -65,21 +73,28 @@ struct TextDocumentItem {
 struct TextDocumentIdentifier {
   DocumentUri uri;
 
+  TextDocumentIdentifier() = default;
+
   explicit TextDocumentIdentifier(DocumentUri uri) : uri(std::move(uri)) {
   }
 };
 
 // Versioned Text Document Identifier
 struct VersionedTextDocumentIdentifier : public TextDocumentIdentifier {
-  std::int32_t version;
+  std::int32_t version{};
 
-  VersionedTextDocumentIdentifier(DocumentUri uri, std::int32_t version)
+  VersionedTextDocumentIdentifier() = default;
+
+  explicit VersionedTextDocumentIdentifier(
+      DocumentUri uri, std::int32_t version)
       : TextDocumentIdentifier(std::move(uri)), version(version) {
   }
 };
 
 struct OptionalVersionedTextDocumentIdentifier : public TextDocumentIdentifier {
   std::optional<std::int32_t> version;
+
+  OptionalVersionedTextDocumentIdentifier() = default;
 
   OptionalVersionedTextDocumentIdentifier(
       DocumentUri uri, std::optional<std::int32_t> version)
@@ -91,6 +106,8 @@ struct OptionalVersionedTextDocumentIdentifier : public TextDocumentIdentifier {
 struct TextDocumentPositionParams {
   TextDocumentIdentifier text_document;
   Position position;
+
+  TextDocumentPositionParams() = default;
 
   explicit TextDocumentPositionParams(
       TextDocumentIdentifier text_document, Position position)
@@ -104,10 +121,11 @@ struct DocumentFilter {
   std::optional<std::string> scheme;
   std::optional<std::string> pattern;
 
+  DocumentFilter() = default;
+
   explicit DocumentFilter(
-      std::optional<std::string> language = std::nullopt,
-      std::optional<std::string> scheme = std::nullopt,
-      std::optional<std::string> pattern = std::nullopt)
+      std::optional<std::string> language, std::optional<std::string> scheme,
+      std::optional<std::string> pattern)
       : language(std::move(language)),
         scheme(std::move(scheme)),
         pattern(std::move(pattern)) {
@@ -121,6 +139,8 @@ struct TextEdit {
   Range range;
   std::string newT_text;
 
+  TextEdit() = default;
+
   explicit TextEdit(Range range, std::string new_text)
       : range(std::move(range)), newT_text(std::move(new_text)) {
   }
@@ -131,9 +151,11 @@ struct ChangeAnnotation {
   std::optional<bool> needs_confirmation;
   std::optional<std::string> description;
 
+  ChangeAnnotation() = default;
+
   explicit ChangeAnnotation(
-      std::string label, std::optional<bool> needs_confirmation = std::nullopt,
-      std::optional<std::string> description = std::nullopt)
+      std::string label, std::optional<bool> needs_confirmation,
+      std::optional<std::string> description)
       : label(std::move(label)),
         needs_confirmation(needs_confirmation),
         description(std::move(description)) {
@@ -144,6 +166,8 @@ using ChangeAnnotationIdentifier = std::string;
 
 struct AnnotatedTextEdit : public TextEdit {
   ChangeAnnotationIdentifier annotation_id;
+
+  AnnotatedTextEdit() = default;
 
   AnnotatedTextEdit(
       Range range, std::string new_text,
@@ -158,6 +182,8 @@ struct TextDocumentEdit {
   OptionalVersionedTextDocumentIdentifier text_document;
   std::vector<std::variant<TextEdit, AnnotatedTextEdit>> edits;
 
+  TextDocumentEdit() = default;
+
   TextDocumentEdit(
       OptionalVersionedTextDocumentIdentifier text_document,
       std::vector<std::variant<TextEdit, AnnotatedTextEdit>> edits)
@@ -170,6 +196,8 @@ struct Location {
   DocumentUri uri;
   Range range;
 
+  Location() = default;
+
   explicit Location(DocumentUri uri, Range range)
       : uri(std::move(uri)), range(std::move(range)) {
   }
@@ -181,6 +209,8 @@ struct LocationLink {
   DocumentUri target_uri;
   Range target_range;
   Range target_selection_range;
+
+  LocationLink() = default;
 
   LocationLink(
       std::optional<Range> origin_selection_range, DocumentUri target_uri,
@@ -205,6 +235,8 @@ enum class DiagnosticTag : std::uint8_t { kUnnecessary = 1, kDeprecated = 2 };
 struct CodeDescription {
   URI href;
 
+  CodeDescription() = default;
+
   explicit CodeDescription(URI href) : href(std::move(href)) {
   }
 };
@@ -212,6 +244,8 @@ struct CodeDescription {
 struct DiagnosticRelatedInformation {
   Location location;
   std::string message;
+
+  DiagnosticRelatedInformation() = default;
 
   DiagnosticRelatedInformation(Location location, std::string message)
       : location(std::move(location)), message(std::move(message)) {
@@ -229,16 +263,18 @@ struct Diagnostic {
   std::optional<std::vector<DiagnosticRelatedInformation>> related_information;
   std::optional<LSPAny> data;
 
-  Diagnostic(
+  Diagnostic() = default;
+
+  explicit Diagnostic(
       Range range, std::string message,
-      std::optional<DiagnosticSeverity> severity = std::nullopt,
-      std::variant<Integer, std::string> code = {},
-      std::optional<CodeDescription> code_description = std::nullopt,
-      std::optional<std::string> source = std::nullopt,
-      std::optional<std::vector<DiagnosticTag>> tags = std::nullopt,
+      std::optional<DiagnosticSeverity> severity,
+      std::variant<Integer, std::string> code,
+      std::optional<CodeDescription> code_description,
+      std::optional<std::string> source,
+      std::optional<std::vector<DiagnosticTag>> tags,
       std::optional<std::vector<DiagnosticRelatedInformation>>
-          related_information = std::nullopt,
-      std::optional<LSPAny> data = std::nullopt)
+          related_information,
+      std::optional<LSPAny> data)
       : range(std::move(range)),
         severity(std::move(severity)),
         code(std::move(code)),
@@ -257,9 +293,11 @@ struct Command {
   std::string command;
   std::optional<std::vector<LSPAny>> arguments;
 
-  Command(
+  Command() = default;
+
+  explicit Command(
       std::string title, std::string command,
-      std::optional<std::vector<LSPAny>> arguments = std::nullopt)
+      std::optional<std::vector<LSPAny>> arguments)
       : title(std::move(title)),
         command(std::move(command)),
         arguments(std::move(arguments)) {
@@ -270,10 +308,12 @@ struct Command {
 enum class MarkupKind { kPlainText, kMarkdown };
 
 struct MarkupContent {
-  MarkupKind kind;
+  MarkupKind kind{};
   std::string value;
 
-  MarkupContent(MarkupKind kind, std::string value)
+  MarkupContent() = default;
+
+  explicit MarkupContent(MarkupKind kind, std::string value)
       : kind(kind), value(std::move(value)) {
   }
 };
@@ -283,9 +323,10 @@ struct CreateFileOptions {
   std::optional<bool> overwrite;
   std::optional<bool> ignore_if_exists;
 
+  CreateFileOptions() = default;
+
   explicit CreateFileOptions(
-      std::optional<bool> overwrite = std::nullopt,
-      std::optional<bool> ignore_if_exists = std::nullopt)
+      std::optional<bool> overwrite, std::optional<bool> ignore_if_exists)
       : overwrite(overwrite), ignore_if_exists(ignore_if_exists) {
   }
 };
@@ -296,9 +337,11 @@ struct CreateFile {
   std::optional<CreateFileOptions> options;
   std::optional<ChangeAnnotationIdentifier> annotation_id;
 
+  CreateFile() = default;
+
   explicit CreateFile(
-      DocumentUri uri, std::optional<CreateFileOptions> options = std::nullopt,
-      std::optional<ChangeAnnotationIdentifier> annotation_id = std::nullopt)
+      DocumentUri uri, std::optional<CreateFileOptions> options,
+      std::optional<ChangeAnnotationIdentifier> annotation_id)
       : uri(std::move(uri)),
         options(std::move(options)),
         annotation_id(std::move(annotation_id)) {
@@ -309,9 +352,10 @@ struct RenameFileOptions {
   std::optional<bool> overwrite;
   std::optional<bool> ignore_if_exists;
 
+  RenameFileOptions() = default;
+
   explicit RenameFileOptions(
-      std::optional<bool> overwrite = std::nullopt,
-      std::optional<bool> ignore_if_exists = std::nullopt)
+      std::optional<bool> overwrite, std::optional<bool> ignore_if_exists)
       : overwrite(overwrite), ignore_if_exists(ignore_if_exists) {
   }
 };
@@ -323,10 +367,12 @@ struct RenameFile {
   std::optional<RenameFileOptions> options;
   std::optional<ChangeAnnotationIdentifier> annotation_id;
 
-  RenameFile(
+  RenameFile() = default;
+
+  explicit RenameFile(
       DocumentUri old_uri, DocumentUri new_uri,
-      std::optional<RenameFileOptions> options = std::nullopt,
-      std::optional<ChangeAnnotationIdentifier> annotation_id = std::nullopt)
+      std::optional<RenameFileOptions> options,
+      std::optional<ChangeAnnotationIdentifier> annotation_id)
       : old_uri(std::move(old_uri)),
         new_uri(std::move(new_uri)),
         options(std::move(options)),
@@ -338,9 +384,10 @@ struct DeleteFileOptions {
   std::optional<bool> recursive;
   std::optional<bool> ignore_if_not_exists;
 
+  DeleteFileOptions() = default;
+
   explicit DeleteFileOptions(
-      std::optional<bool> recursive = std::nullopt,
-      std::optional<bool> ignore_if_not_exists = std::nullopt)
+      std::optional<bool> recursive, std::optional<bool> ignore_if_not_exists)
       : recursive(recursive), ignore_if_not_exists(ignore_if_not_exists) {
   }
 };
@@ -351,9 +398,11 @@ struct DeleteFile {
   std::optional<DeleteFileOptions> options;
   std::optional<ChangeAnnotationIdentifier> annotation_id;
 
+  DeleteFile() = default;
+
   explicit DeleteFile(
-      DocumentUri uri, std::optional<DeleteFileOptions> options = std::nullopt,
-      std::optional<ChangeAnnotationIdentifier> annotation_id = std::nullopt)
+      DocumentUri uri, std::optional<DeleteFileOptions> options,
+      std::optional<ChangeAnnotationIdentifier> annotation_id)
       : uri(std::move(uri)),
         options(std::move(options)),
         annotation_id(std::move(annotation_id)) {
@@ -379,16 +428,16 @@ struct WorkspaceEdit {
       document_changes;
   std::optional<std::map<std::string, ChangeAnnotation>> change_annotations;
 
+  WorkspaceEdit() = default;
+
   explicit WorkspaceEdit(
-      std::optional<std::map<DocumentUri, std::vector<TextEdit>>> changes =
-          std::nullopt,
+      std::optional<std::map<DocumentUri, std::vector<TextEdit>>> changes,
       std::optional<std::variant<
           std::vector<TextDocumentEdit>,
           std::vector<std::variant<
               TextDocumentEdit, CreateFile, RenameFile, DeleteFile>>>>
-          document_changes = std::nullopt,
-      std::optional<std::map<std::string, ChangeAnnotation>>
-          change_annotations = std::nullopt)
+          document_changes,
+      std::optional<std::map<std::string, ChangeAnnotation>> change_annotations)
       : changes(std::move(changes)),
         document_changes(std::move(document_changes)),
         change_annotations(std::move(change_annotations)) {
@@ -402,12 +451,13 @@ struct WorkspaceEditClientCapabilities {
   std::optional<bool> normalizes_line_endings;
   std::optional<std::map<std::string, bool>> change_annotation_support;
 
+  WorkspaceEditClientCapabilities() = default;
+
   explicit WorkspaceEditClientCapabilities(
-      std::optional<bool> document_changes = std::nullopt,
-      std::optional<std::vector<ResourceOperationKind>> resource_operations =
-          std::nullopt,
-      std::optional<FailureHandlingKind> failure_handling = std::nullopt,
-      std::optional<bool> normalizes_line_endings = std::nullopt,
+      std::optional<bool> document_changes,
+      std::optional<std::vector<ResourceOperationKind>> resource_operations,
+      std::optional<FailureHandlingKind> failure_handling,
+      std::optional<bool> normalizes_line_endings,
       std::optional<std::map<std::string, bool>> change_annotation_support =
           std::nullopt)
       : document_changes(document_changes),
@@ -426,10 +476,11 @@ struct WorkDoneProgressBegin {
   std::optional<std::string> message;
   std::optional<Uinteger> percentage;
 
+  WorkDoneProgressBegin() = default;
+
   explicit WorkDoneProgressBegin(
-      std::string title, std::optional<bool> cancellable = std::nullopt,
-      std::optional<std::string> message = std::nullopt,
-      std::optional<Uinteger> percentage = std::nullopt)
+      std::string title, std::optional<bool> cancellable,
+      std::optional<std::string> message, std::optional<Uinteger> percentage)
       : title(std::move(title)),
         cancellable(cancellable),
         message(std::move(message)),
@@ -443,10 +494,11 @@ struct WorkDoneProgressReport {
   std::optional<std::string> message;
   std::optional<Uinteger> percentage;
 
+  WorkDoneProgressReport() = default;
+
   explicit WorkDoneProgressReport(
-      std::optional<bool> cancellable = std::nullopt,
-      std::optional<std::string> message = std::nullopt,
-      std::optional<Uinteger> percentage = std::nullopt)
+      std::optional<bool> cancellable, std::optional<std::string> message,
+      std::optional<Uinteger> percentage)
       : cancellable(cancellable),
         message(std::move(message)),
         percentage(percentage) {
@@ -457,8 +509,9 @@ struct WorkDoneProgressEnd {
   std::string kind = "end";
   std::optional<std::string> message;
 
-  explicit WorkDoneProgressEnd(
-      std::optional<std::string> message = std::nullopt)
+  WorkDoneProgressEnd() = default;
+
+  explicit WorkDoneProgressEnd(std::optional<std::string> message)
       : message(std::move(message)) {
   }
 };
@@ -466,8 +519,9 @@ struct WorkDoneProgressEnd {
 struct WorkDoneProgressParams {
   std::optional<ProgressToken> work_done_token;
 
-  explicit WorkDoneProgressParams(
-      std::optional<ProgressToken> work_done_token = std::nullopt)
+  WorkDoneProgressParams() = default;
+
+  explicit WorkDoneProgressParams(std::optional<ProgressToken> work_done_token)
       : work_done_token(std::move(work_done_token)) {
   }
 };
@@ -475,8 +529,9 @@ struct WorkDoneProgressParams {
 struct WorkDoneProgressOptions {
   std::optional<bool> work_done_progress;
 
-  explicit WorkDoneProgressOptions(
-      std::optional<bool> work_done_progress = std::nullopt)
+  WorkDoneProgressOptions() = default;
+
+  explicit WorkDoneProgressOptions(std::optional<bool> work_done_progress)
       : work_done_progress(work_done_progress) {
   }
 };
@@ -485,8 +540,10 @@ struct WorkDoneProgressOptions {
 struct PartialResultParams {
   std::optional<ProgressToken> partial_result_token;
 
+  PartialResultParams() = default;
+
   explicit PartialResultParams(
-      std::optional<ProgressToken> partial_result_token = std::nullopt)
+      std::optional<ProgressToken> partial_result_token)
       : partial_result_token(std::move(partial_result_token)) {
   }
 };
