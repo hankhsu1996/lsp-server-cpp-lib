@@ -3,4 +3,8 @@ cc_library(
     hdrs = glob(["*.hpp"]),
     includes = ["."],
     visibility = ["//visibility:public"],
+    deps = [
+        "//utils",
+        "@nlohmann_json//:json",
+    ],
 )

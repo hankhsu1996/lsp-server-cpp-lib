@@ -7,6 +7,10 @@
 #include <variant>
 #include <vector>
 
+#include <nlohmann/json.hpp>
+
+#include "utils/json_utils.hpp"  // IWYU pragma: keep
+
 namespace lsp::types {
 
 // Base types
@@ -45,5 +49,8 @@ struct ProgressParams {
       : token(std::move(token)), value(std::move(value)) {
   }
 };
+
+// JSON serialization
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CancelParams, id);
 
 }  // namespace lsp::types
