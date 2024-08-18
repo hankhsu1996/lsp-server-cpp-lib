@@ -1,0 +1,11 @@
+# utils/BUILD.bazel
+
+cc_library(
+    name = "utils",
+    srcs = ["json_utils.hpp"],
+    hdrs = ["json_utils.hpp"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@nlohmann_json//:json",
+    ],
+)
