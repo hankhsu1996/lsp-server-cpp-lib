@@ -5,7 +5,10 @@
 #include <string>
 #include <utility>
 
+#include <nlohmann/json.hpp>
+
 #include "types/base.hpp"
+#include "utils/json.hpp"  // IWYU pragma: keep
 
 namespace lsp::types {
 
@@ -550,5 +553,10 @@ struct PartialResultParams {
 
 // Trace Value
 enum class TraceValue { kOff, kMessages, kVerbose };
+
+// JSON Serialization
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    RegularExpressionsClientCapabilities, engine, version);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Position, line, character);
 
 }  // namespace lsp::types

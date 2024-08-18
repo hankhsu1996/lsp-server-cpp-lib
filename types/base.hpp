@@ -9,7 +9,7 @@
 
 #include <nlohmann/json.hpp>
 
-#include "utils/json_utils.hpp"  // IWYU pragma: keep
+#include "utils/json.hpp"  // IWYU pragma: keep
 
 namespace lsp::types {
 
