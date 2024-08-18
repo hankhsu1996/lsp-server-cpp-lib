@@ -17,10 +17,6 @@ using lsp::types::TraceValue;
 using lsp::types::WorkDoneProgressParams;
 using lsp::types::WorkspaceEditClientCapabilities;
 
-// Forward declarations
-struct ClientCapabilities;
-struct ServerCapabilities;
-
 // Placeholders
 struct WorkspaceFolder {};
 struct CompletionClientCapabilities {};
