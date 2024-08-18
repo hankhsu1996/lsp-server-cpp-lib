@@ -2,8 +2,8 @@
 
 cc_library(
     name = "utils",
-    srcs = ["json_utils.hpp"],
-    hdrs = ["json_utils.hpp"],
+    srcs = glob(["*.cpp"]),
+    hdrs = glob(["*.hpp"]),
     visibility = ["//visibility:public"],
     deps = [
         "@nlohmann_json//:json",
