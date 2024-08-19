@@ -4,66 +4,51 @@
 
 #include <optional>
 #include <stdexcept>
-#include <string_view>
 #include <variant>
 
 #include <nlohmann/json.hpp>
 
 namespace nlohmann {
 
-// Helper to convert type T into a constexpr string
-template <typename T>
-constexpr auto make_type_name() {
-  using namespace std::string_view_literals;
-#ifdef __clang__
-  std::string_view name = __PRETTY_FUNCTION__;
-  name.remove_prefix("auto nlohmann::make_type_name() [T = "sv.size());
-  name.remove_suffix("]"sv.size());
-#elif defined(__GNUC__) || defined(__GNUG__)
-  std::string_view name = __PRETTY_FUNCTION__;
-  name.remove_prefix(
-      "constexpr auto nlohmann::make_type_name() [with T = "sv.size());
-  name.remove_suffix("]"sv.size());
-#elif defined(_MSC_VER)
-  std::string_view name = __FUNCSIG__;
-  name.remove_prefix("auto __cdecl nlohmann::make_type_name<"sv.size());
-  name.remove_suffix(">(void)"sv.size());
-#endif
-  return name;
-}
-
-template <typename T>
-constexpr auto type_name_sv = make_type_name<T>();
-
-// Serializer for std::variant
+/**
+ * @brief Specialization of adl_serializer for std::variant<Ts...>.
+ *
+ * This specialization allows us to leverage `NLOHMANN_DEFINE_TYPE_INTRUSIVE`
+ * or `NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE` macros for structs containing
+ * `std::variant`, simplifying the implementation of `to_json` and `from_json`
+ * functions.
+ *
+ * @note The `from_json` function deserializes by attempting each type in the
+ * variant sequentially. If deserialization fails for a type, it moves on to
+ * the next. This approach, while convenient, has a linear performance cost
+ * relative to the number of types in the variant, which can be inefficient
+ * for large variants.
+ *
+ * @warning In contexts like the LSP specification, where many complex
+ * variants are present, this may lead to performance issues. The alternative
+ * would be to implement custom `from_json` functions tailored to specific
+ * variants, which is more performant but also much more labor-intensive.
+ */
 template <typename... Ts>
 struct adl_serializer<std::variant<Ts...>> {
-  using Variant = std::variant<Ts...>;
-  using Json = nlohmann::json;
-
-  static void to_json(Json& j, const Variant& data) {
-    std::visit(
-        [&j](const auto& v) {
-          using T = std::decay_t<decltype(v)>;
-          j["type"] = type_name_sv<T>;
-          j["data"] = v;
-        },
-        data);
+  static void to_json(nlohmann::json& j, const std::variant<Ts...>& data) {
+    std::visit([&j](const auto& v) { j = v; }, data);
   }
 
-  static void from_json(const Json& j, Variant& data) {
+  static void from_json(const nlohmann::json& j, std::variant<Ts...>& data) {
     auto variant_from_json = [&](const auto& type) -> bool {
       using T = std::decay_t<decltype(type)>;
-      if (j.at("type").get<std::string_view>() != type_name_sv<T>) {
+      try {
+        data = j.get<T>();
+        return true;
+      } catch (const nlohmann::json::exception&) {
         return false;
       }
-      data = j.at("data").template get<T>();
-      return true;
     };
 
     bool found = (variant_from_json(Ts{}) || ...);
     if (!found) {
-      throw std::invalid_argument("Invalid JSON type for variant");
+      throw std::runtime_error("Invalid JSON type for variant");
     }
   }
 };

@@ -1,5 +1,6 @@
 cc_test(
     name = "json_tests",
+    size = "small",
     srcs = ["json_tests.cpp"],
     deps = [
         "//utils",
